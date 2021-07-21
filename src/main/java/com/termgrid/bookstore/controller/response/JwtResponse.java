@@ -1,4 +1,4 @@
-package com.termgrid.bookstore.controller.responses;
+package com.termgrid.bookstore.controller.response;
 
 import java.util.List;
 

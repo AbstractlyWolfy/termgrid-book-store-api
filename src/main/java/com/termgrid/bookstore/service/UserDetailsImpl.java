@@ -13,15 +13,17 @@ import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private static final long serialVersionUID = 1L;
-
+    /** The user details id */
     private final int id;
 
+    /** The username */
     private final String username;
 
+    /** The password of the user, json ignored to stop it showing in json strings */
     @JsonIgnore
     private final String password;
 
+    /** Appropriate authorities */
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(int id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
@@ -31,6 +33,13 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
+    /**
+     * Build an instance of {@link UserDetailsImpl} with appropriate authorities
+     *
+     * @param user - {@link User}
+     *
+     * @return UserDetailsImpl
+     */
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
@@ -48,18 +57,33 @@ public class UserDetailsImpl implements UserDetails {
         return authorities;
     }
 
+    /**
+     * Get the id
+     *
+     * @return id - {@link Integer}
+     */
     public int getId() {
         return id;
     }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
+    /**
+     * Get the username
+     *
+     * @return username - {@link String}
+     */
     @Override
     public String getUsername() {
         return username;
+    }
+
+    /**
+     * Get the password
+     *
+     * @return password - {@link String}
+     */
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override
@@ -86,8 +110,10 @@ public class UserDetailsImpl implements UserDetails {
     public boolean equals(Object o) {
         if (this == o)
             return true;
+
         if (o == null || getClass() != o.getClass())
             return false;
+
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }

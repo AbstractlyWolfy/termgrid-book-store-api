@@ -5,6 +5,7 @@ import com.termgrid.bookstore.model.role.Role;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,6 +40,9 @@ public final class User {
 
     @Column(name = "profile_picture")
     private String picture;
+
+    @Column(name = "date_created")
+    private Date created;
 
     @ManyToMany(
             cascade = CascadeType.ALL,
@@ -139,7 +143,6 @@ public final class User {
 
     /**
      * Set the users password
-     *
      * @param password - {@link String}
      */
     public void setPassword(@NonNull String password) {
@@ -147,8 +150,15 @@ public final class User {
     }
 
     /**
+     * Get the date this user was created
+     * @return created - {@link Date}
+     */
+    public Date getCreated() {
+        return created;
+    }
+
+    /**
      * Get the JWT token
-     *
      * @return token - {@link String}
      */
     public String getToken() {
@@ -157,7 +167,6 @@ public final class User {
 
     /**
      * Set this users JWT Token
-     *
      * @param token - token
      */
     public void setToken(String token) {
@@ -166,7 +175,6 @@ public final class User {
 
     /**
      * Get the users roles
-     *
      * @return roles
      */
     public Set<Role> getRoles() {
@@ -175,8 +183,7 @@ public final class User {
 
     /**
      * Set all new roles to a user
-     *
-     * @param roles
+     * @param roles - {@link Set}
      */
     public void setRoles(Set<Role> roles) {
         this.roles = roles;

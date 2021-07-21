@@ -24,6 +24,13 @@ public class JwtUtil implements Serializable {
     @Value("${bezkoder.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
+    /**
+     * Generate a JWT Token
+     *
+     * @param authentication - {@link Authentication}
+     *
+     * @return JWT Token - {@link String}
+     */
     public String generateJwtToken(Authentication authentication) {
 
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
@@ -38,10 +45,24 @@ public class JwtUtil implements Serializable {
                 .compact();
     }
 
+    /**
+     * Get the username of a user from their JWT Token
+     *
+     * @param token - {@link String}
+     *
+     * @return Username
+     */
     public String getUsernameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
+    /**
+     * Validate the authenticity of a JWT token
+     *
+     * @param authToken - {@link String}
+     *
+     * @return Valid - {@link Boolean}
+     */
     public boolean validateJwtToken(String authToken) {
 
         try {
@@ -62,6 +83,13 @@ public class JwtUtil implements Serializable {
         return false;
     }
 
+    /**
+     * Parse a JWT token from the Bearer Token Header
+     *
+     * @param request - request
+     *
+     * @return Token - {@link String}
+     */
     public String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 

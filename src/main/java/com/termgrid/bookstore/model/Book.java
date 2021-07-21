@@ -19,6 +19,18 @@ public final class Book {
     @Column(name = "slug", unique = true)
     private String slug;
 
+    /** The descriptuon for the book */
+    @Column(name = "description")
+    private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User author;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    private Category category;
+
     /**
      * Get the id for the book
      * @return id - {@link Integer}

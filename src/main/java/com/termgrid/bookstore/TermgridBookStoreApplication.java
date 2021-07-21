@@ -18,9 +18,6 @@ public class TermgridBookStoreApplication {
 	@Autowired
 	private RoleDAO roleDAO;
 
-	@Autowired
-	private UserDAO userDAO;
-
 	/*
 		1. Create a simple book rating site
 		2. entity :- User, Book

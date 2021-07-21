@@ -19,7 +19,6 @@ public class Role {
 
     /**
      * Get the unique id for this role
-     *
      * @return id - {@link Integer}
      */
     public Integer getId() {
@@ -28,7 +27,6 @@ public class Role {
 
     /**
      * Get role name
-     *
      * @return name - {@link String}
      */
     @NonNull
@@ -38,7 +36,6 @@ public class Role {
 
     /**
      * Set the role name.
-     *
      * @param name - {@link String}
      */
     public void setName(@NonNull String name) {

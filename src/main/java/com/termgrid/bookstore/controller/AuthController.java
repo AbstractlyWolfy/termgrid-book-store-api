@@ -2,8 +2,8 @@ package com.termgrid.bookstore.controller;
 
 import com.termgrid.bookstore.controller.request.LoginRequest;
 import com.termgrid.bookstore.controller.request.RegisterRequest;
-import com.termgrid.bookstore.controller.responses.GenericResponse;
-import com.termgrid.bookstore.controller.responses.JwtResponse;
+import com.termgrid.bookstore.controller.response.GenericResponse;
+import com.termgrid.bookstore.controller.response.JwtResponse;
 import com.termgrid.bookstore.dao.RoleDAO;
 import com.termgrid.bookstore.dao.UserDAO;
 import com.termgrid.bookstore.model.User;
@@ -12,6 +12,7 @@ import com.termgrid.bookstore.model.role.SiteRole;
 import com.termgrid.bookstore.service.UserDetailsImpl;
 import com.termgrid.bookstore.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,16 +21,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin
-@Controller
+@RestController
 @RequestMapping(path = "/v1/auth")
 public class AuthController {
 
@@ -51,14 +49,12 @@ public class AuthController {
     @RequestMapping(
             value = "/login",
             method = RequestMethod.POST,
-            produces = "application/json",
-            consumes = "application/json"
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
-        System.out.println("AUTH WORKED");
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtUtil.generateJwtToken(authentication);
@@ -89,8 +85,8 @@ public class AuthController {
     @RequestMapping(
             value = "/register",
             method = RequestMethod.POST,
-            produces = "application/json",
-            consumes = "application/json"
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         if (userDAO.existsByUsername(request.getUsername())) {
