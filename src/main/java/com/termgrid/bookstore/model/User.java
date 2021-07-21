@@ -36,10 +36,11 @@ public final class User {
     private String password;
 
     @Column(name = "token")
+    @JsonIgnore
     private String token;
 
-    @Column(name = "profile_picture")
-    private String picture;
+    @Lob
+    private Byte[] image;
 
     @Column(name = "date_created")
     private Date created;
@@ -53,6 +54,7 @@ public final class User {
             joinColumns = @JoinColumn(referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(referencedColumnName = "role_id")
     )
+    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
     public User() {
@@ -150,11 +152,35 @@ public final class User {
     }
 
     /**
+     * Get the image for this user
+     * @return image - Byte[]
+     */
+    public Byte[] getImage() {
+        return image;
+    }
+
+    /**
+     * Set the image for this user
+     * @param image - Byte[]
+     */
+    public void setImage(Byte[] image) {
+        this.image = image;
+    }
+
+    /**
      * Get the date this user was created
      * @return created - {@link Date}
      */
     public Date getCreated() {
         return created;
+    }
+
+    /**
+     * Set the date the user was created
+     * @param created - {@link Date}
+     */
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     /**

@@ -12,7 +12,7 @@ public final class Book {
     private Integer id;
 
     /** The name of the book */
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     /** The slug for the page url */
@@ -20,7 +20,7 @@ public final class Book {
     private String slug;
 
     /** The descriptuon for the book */
-    @Column(name = "description")
+    @Column(name = "description", length = 512)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,6 +30,9 @@ public final class Book {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Category category;
+
+    @Lob
+    private byte[] image;
 
     /**
      * Get the id for the book
@@ -69,5 +72,61 @@ public final class Book {
      */
     public void setSlug(String slug) {
         this.slug = slug;
+    }
+
+    /**
+     * Get the description for the book
+     * @return description - {@link String}
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Set the book description
+     * @param description - {@link String}
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Get the author for the book
+     * @return author - {@link User}
+     */
+    public User getAuthor() {
+        return author;
+    }
+
+    /**
+     * Set the book author
+     * @param author - {@link User}
+     */
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    /**
+     * Get the category for the book
+     * @return category - {@link Category}
+     */
+    public Category getCategory() {
+        return category;
+    }
+
+    /**
+     * Get the image for the book
+     * @return image - {@link Byte[]}
+     */
+    public byte[] getImage() {
+        return image;
+    }
+
+    /**
+     * Set the image for this book
+     * @param image - Byte[]
+     */
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }

@@ -77,7 +77,6 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(
                 userDetails.getId(),
                 userDetails.getUsername(),
-                roles,
                 token
         ));
     }
@@ -96,6 +95,7 @@ public class AuthController {
         User user = new User(request.getUsername(), encoder.encode(request.getPassword()));
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
+        user.setCreated(new Date());
 
         Set<Role> defaultRoles = new HashSet<>();
         defaultRoles.add(roleDAO.findByName(SiteRole.USER.name()));
