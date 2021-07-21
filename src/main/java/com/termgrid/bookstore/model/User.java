@@ -1,15 +1,20 @@
 package com.termgrid.bookstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.termgrid.bookstore.model.role.Role;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "email_address" }) })
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 public final class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Integer id;
 
     @Column(name = "first_name")
@@ -20,15 +25,47 @@ public final class User {
     @NonNull
     private String lastName;
 
-    @Column(name = "email_address", unique = true)
+    @Column(name = "username", unique = true)
     @NonNull
-    private String email;
+    private String username;
+
+    @Column(name = "password")
+    @NonNull
+    @JsonIgnore
+    private String password;
+
+    @Column(name = "token")
+    private String token;
+
+    @Column(name = "profile_picture")
+    private String picture;
+
+    @ManyToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JoinTable(
+            name = "roles",
+            joinColumns = @JoinColumn(referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(referencedColumnName = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
+    public User() {
+
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     /**
      * Get the id for the user
      *
      * @return id - {@link Integer}
      */
+    @NonNull
     public Integer getId() {
         return id;
     }
@@ -38,6 +75,7 @@ public final class User {
      *
      * @return first name - {@link String}
      */
+    @NonNull
     public String getFirstName() {
         return firstName;
     }
@@ -56,6 +94,7 @@ public final class User {
      *
      * @return last name - {@link String}
      */
+    @NonNull
     public String getLastName() {
         return lastName;
     }
@@ -70,20 +109,76 @@ public final class User {
     }
 
     /**
-     * Get the users email address
+     * Get the users username
      *
      * @return email - {@link String}
      */
-    public String getEmail() {
-        return email;
+    @NonNull
+    public String getUsername() {
+        return username;
     }
 
     /**
-     * Set the users email
+     * Set the users username
      *
-     * @param email - {@link String}
+     * @param username - {@link String}
      */
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * Get the users password
+     *
+     * @return password - {@link String}
+     */
+    @NonNull
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Set the users password
+     *
+     * @param password - {@link String}
+     */
+    public void setPassword(@NonNull String password) {
+        this.password = password;
+    }
+
+    /**
+     * Get the JWT token
+     *
+     * @return token - {@link String}
+     */
+    public String getToken() {
+        return token;
+    }
+
+    /**
+     * Set this users JWT Token
+     *
+     * @param token - token
+     */
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    /**
+     * Get the users roles
+     *
+     * @return roles
+     */
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    /**
+     * Set all new roles to a user
+     *
+     * @param roles
+     */
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

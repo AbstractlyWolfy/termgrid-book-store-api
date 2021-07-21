@@ -8,6 +8,7 @@ public final class Book {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "book_id")
     private Integer id;
 
     /** The name of the book */
