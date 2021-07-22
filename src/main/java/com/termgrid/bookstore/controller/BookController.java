@@ -109,7 +109,7 @@ public final class BookController {
      * @return review - {@link Review}
      */
     @RequestMapping(
-            value = {"/reviews/get/{id}"},
+            value = {"/review/get/{id}"},
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
@@ -131,7 +131,7 @@ public final class BookController {
      * @return Review - {@link Review}
      */
     @RequestMapping(
-            value = {"/reviews/create"},
+            value = {"/review/create"},
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
@@ -170,7 +170,7 @@ public final class BookController {
      * @return reviews - Review[]
      */
     @RequestMapping(
-            value = {"/reviews/all/{id}"},
+            value = {"/review/all/{id}"},
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
@@ -199,7 +199,7 @@ public final class BookController {
      * @return comment - {@link Comment}
      */
     @RequestMapping(
-            value = {"/comments/get/{id}"},
+            value = {"/comment/get/{id}"},
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
@@ -222,7 +222,7 @@ public final class BookController {
      * @return comments - Comments[]
      */
     @RequestMapping(
-            value = {"/comments/all/{id}"},
+            value = {"/comment/all/{id}"},
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
@@ -252,7 +252,7 @@ public final class BookController {
      * @return Comment - {@link Comment}
      */
     @RequestMapping(
-            value = {"/comments/create"},
+            value = {"/comment/create"},
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
