@@ -35,8 +35,6 @@ public class JwtUtil implements Serializable {
 
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
-        System.out.println("Validate: " + new Date((new Date()).getTime() + jwtExpirationMs).toGMTString());
-
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
