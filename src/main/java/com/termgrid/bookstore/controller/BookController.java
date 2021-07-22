@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/v1/book")
 public final class BookController {
@@ -90,8 +91,7 @@ public final class BookController {
     @RequestMapping(
             value = {"/get/{id}"},
             method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> getBookById(@PathVariable(name = "id") final String id) {
         Book book = bookDAO.findById(Integer.parseInt(id)).orElse(null);
@@ -111,8 +111,7 @@ public final class BookController {
     @RequestMapping(
             value = {"/get-slug/{slug}"},
             method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> getBookBySlug(@PathVariable(name = "slug") final String slug) {
         Book book = bookDAO.findBySlug(slug, Pageable.unpaged()).getContent().get(0);
@@ -132,8 +131,7 @@ public final class BookController {
     @RequestMapping(
             value = {"/review/get/{id}"},
             method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> getReviewById(@PathVariable(name = "id") final String id) {
         Review review = reviewDAO.findById(Integer.parseInt(id)).orElse(null);
@@ -193,8 +191,7 @@ public final class BookController {
     @RequestMapping(
             value = {"/review/all/{id}"},
             method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> getReviews(@PathVariable(name = "id") final String id, @RequestParam(name = "page", defaultValue = "0") final String page, @RequestParam(name = "perPage", defaultValue = "5") final String perPage) {
         Book book = bookDAO.findById(Integer.parseInt(id)).orElse(null);
@@ -222,8 +219,7 @@ public final class BookController {
     @RequestMapping(
             value = {"/comment/get/{id}"},
             method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> getCommentById(@PathVariable(name = "id") final String id) {
         Comment comment = commentDAO.findById(Integer.parseInt(id)).orElse(null);
@@ -245,8 +241,7 @@ public final class BookController {
     @RequestMapping(
             value = {"/comment/all/{id}"},
             method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> getComments(@PathVariable(name = "id") final String id, @RequestParam(name = "page", defaultValue = "0") final String page, @RequestParam(name = "perPage", defaultValue = "5") final String perPage) {
         Review review = reviewDAO.findById(Integer.parseInt(id)).orElse(null);
@@ -309,8 +304,7 @@ public final class BookController {
     @RequestMapping(
         value = {"/all"},
         method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        consumes = MediaType.APPLICATION_JSON_VALUE
+        produces = MediaType.APPLICATION_JSON_VALUE
     )
     public Iterable<Book> getAll() {
         return bookDAO.findAll();
