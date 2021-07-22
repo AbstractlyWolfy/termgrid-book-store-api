@@ -70,6 +70,10 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new GenericResponse("There was an error logging you in."));
         }
 
+        Set<Role> parsedRoles = new HashSet<>();
+        roles.forEach(role -> parsedRoles.add(roleDAO.findByName(role)));
+
+        user.setRoles(parsedRoles);
         user.setToken(token);
         userDAO.save(user);
 
