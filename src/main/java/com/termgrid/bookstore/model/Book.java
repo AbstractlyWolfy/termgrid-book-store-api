@@ -1,6 +1,7 @@
 package com.termgrid.bookstore.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table
@@ -33,6 +34,9 @@ public final class Book {
 
     @Lob
     private byte[] image;
+
+    @Column(name = "date_created")
+    private Date created;
 
     /**
      * Get the id for the book
@@ -128,5 +132,21 @@ public final class Book {
      */
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    /**
+     * Get the date this book was created
+     * @return created - {@link Date}
+     */
+    public Date getCreated() {
+        return created;
+    }
+
+    /**
+     * Set the date the book was created
+     * @param created - {@link Date}
+     */
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }

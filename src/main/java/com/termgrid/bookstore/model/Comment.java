@@ -1,6 +1,7 @@
 package com.termgrid.bookstore.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table
@@ -23,6 +24,9 @@ public final class Comment {
     @Column(name = "comment")
     private String comment;
 
+    @Column(name = "date_created")
+    private Date created;
+
     /**
      * Get the id for the book
      * @return id - {@link Integer}
@@ -40,6 +44,14 @@ public final class Comment {
     }
 
     /**
+     * Set the review the comment was left on
+     * @param review - review
+     */
+    public void setReview(Review review) {
+        this.review = review;
+    }
+
+    /**
      * Get the comment that was left on a review
      * @return comment - {@link String}
      */
@@ -48,10 +60,42 @@ public final class Comment {
     }
 
     /**
+     * Set the comment that was left on this review
+     * @param comment - {@link String}
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    /**
      * Get the author for this review
      * @return author - {@link User}
      */
     public User getAuthor() {
         return author;
+    }
+
+    /**
+     * Set the author who wrote this comment
+     * @param author - {@link User}
+     */
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    /**
+     * Get the date this user was comment
+     * @return created - {@link Date}
+     */
+    public Date getCreated() {
+        return created;
+    }
+
+    /**
+     * Set the date the comment was created
+     * @param created - {@link Date}
+     */
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }
