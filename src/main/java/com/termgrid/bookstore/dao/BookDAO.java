@@ -26,4 +26,11 @@ public interface BookDAO extends PagingAndSortingRepository<Book, Integer> {
      * @return book - {@link Book}
      */
     Page<Book> findByName(String name, Pageable pageable);
+
+    /**
+     * Find a book by its unique slug
+     * @param slug - {@link String}
+     * @return book - {@link Book}
+     */
+    Page<Book> findBySlug(String slug, Pageable pageable);
 }

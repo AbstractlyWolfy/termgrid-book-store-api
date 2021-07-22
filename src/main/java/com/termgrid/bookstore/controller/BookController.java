@@ -104,6 +104,27 @@ public final class BookController {
     }
 
     /**
+     * Get a book by its id.
+     * @param slug - Book slug - {@link Integer}
+     * @return book - {@link Book}
+     */
+    @RequestMapping(
+            value = {"/get-slug/{slug}"},
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> getBookBySlug(@PathVariable(name = "slug") final String slug) {
+        Book book = bookDAO.findBySlug(slug, Pageable.unpaged()).getContent().get(0);
+
+        if (book == null) {
+            return ResponseEntity.badRequest().body(new GenericResponse("Could not locate a book with the slug " + slug));
+        }
+
+        return ResponseEntity.ok(book);
+    }
+
+    /**
      * Get a review by its id.
      * @param id - Review id - {@link Integer}
      * @return review - {@link Review}

@@ -39,9 +39,6 @@ public final class User {
     @JsonIgnore
     private String token;
 
-    @Lob
-    private Byte[] image;
-
     @Column(name = "date_created")
     private Date created;
 
@@ -149,22 +146,6 @@ public final class User {
      */
     public void setPassword(@NonNull String password) {
         this.password = password;
-    }
-
-    /**
-     * Get the image for this user
-     * @return image - Byte[]
-     */
-    public Byte[] getImage() {
-        return image;
-    }
-
-    /**
-     * Set the image for this user
-     * @param image - Byte[]
-     */
-    public void setImage(Byte[] image) {
-        this.image = image;
     }
 
     /**

@@ -6,6 +6,7 @@ import com.termgrid.bookstore.controller.response.GenericResponse;
 import com.termgrid.bookstore.controller.response.JwtResponse;
 import com.termgrid.bookstore.dao.RoleDAO;
 import com.termgrid.bookstore.dao.UserDAO;
+import com.termgrid.bookstore.model.Book;
 import com.termgrid.bookstore.model.User;
 import com.termgrid.bookstore.model.role.Role;
 import com.termgrid.bookstore.model.role.SiteRole;
@@ -22,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -78,8 +80,7 @@ public class AuthController {
         userDAO.save(user);
 
         return ResponseEntity.ok(new JwtResponse(
-                userDetails.getId(),
-                userDetails.getUsername(),
+                user,
                 token
         ));
     }
@@ -92,7 +93,7 @@ public class AuthController {
     )
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         if (userDAO.existsByUsername(request.getUsername())) {
-            return ResponseEntity.badRequest().body(new GenericResponse("Username is already taken"));
+            return ResponseEntity.badRequest().body(new GenericResponse("This username is already taken"));
         }
 
         User user = new User(request.getUsername(), encoder.encode(request.getPassword()));
@@ -106,6 +107,31 @@ public class AuthController {
 
         userDAO.save(user);
 
-        return ResponseEntity.ok(new GenericResponse("Registered successfully"));
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUsername(request.getUsername());
+        loginRequest.setPassword(request.getPassword());
+
+        return login(loginRequest);
+    }
+
+    @RequestMapping(
+            value = "/logout",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> logout(HttpServletRequest servletRequest) {
+        String username = jwtUtil.getUsernameFromJwtToken(jwtUtil.parseJwt(servletRequest));
+
+        User user = userDAO.findByUsername(username).orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body(new GenericResponse("There was an error logging you out."));
+        }
+
+        user.setToken(null);
+        userDAO.save(user);
+
+        return ResponseEntity.ok(new GenericResponse("You have been logged out"));
     }
 }
