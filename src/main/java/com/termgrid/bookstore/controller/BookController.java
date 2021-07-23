@@ -301,7 +301,8 @@ public final class BookController {
 
     @RequestMapping(
             value = {"/image"},
-            method = RequestMethod.POST
+            method = RequestMethod.POST,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<?> setImage(
             @RequestParam(name = "id") final String id,

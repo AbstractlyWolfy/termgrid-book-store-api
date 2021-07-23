@@ -30,10 +30,6 @@ public final class Book {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id")
-    private Category category;
-
     @Lob
     @Column(name = "image")
     @JsonIgnore
@@ -113,14 +109,6 @@ public final class Book {
      */
     public void setAuthor(User author) {
         this.author = author;
-    }
-
-    /**
-     * Get the category for the book
-     * @return category - {@link Category}
-     */
-    public Category getCategory() {
-        return category;
     }
 
     /**
