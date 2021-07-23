@@ -1,5 +1,7 @@
 package com.termgrid.bookstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -33,6 +35,8 @@ public final class Book {
     private Category category;
 
     @Lob
+    @Column(name = "image")
+    @JsonIgnore
     private byte[] image;
 
     @Column(name = "date_created")
@@ -40,6 +44,7 @@ public final class Book {
 
     /**
      * Get the id for the book
+     *
      * @return id - {@link Integer}
      */
     public Integer getId() {
@@ -120,6 +125,7 @@ public final class Book {
 
     /**
      * Get the image for the book
+     *
      * @return image - {@link Byte[]}
      */
     public byte[] getImage() {
@@ -128,6 +134,7 @@ public final class Book {
 
     /**
      * Set the image for this book
+     *
      * @param image - Byte[]
      */
     public void setImage(byte[] image) {

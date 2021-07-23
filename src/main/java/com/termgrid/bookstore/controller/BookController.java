@@ -8,11 +8,10 @@ import com.termgrid.bookstore.dao.BookDAO;
 import com.termgrid.bookstore.dao.CommentDAO;
 import com.termgrid.bookstore.dao.ReviewDAO;
 import com.termgrid.bookstore.dao.UserDAO;
-import com.termgrid.bookstore.model.Book;
-import com.termgrid.bookstore.model.Comment;
-import com.termgrid.bookstore.model.Review;
-import com.termgrid.bookstore.model.User;
+import com.termgrid.bookstore.model.*;
 import com.termgrid.bookstore.utils.JwtUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.tomcat.util.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,10 +20,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 @CrossOrigin
 @RestController
@@ -65,9 +70,6 @@ public final class BookController {
             return ResponseEntity.badRequest().body(new GenericResponse("Failed to create your book, the author did not exist."));
         }
 
-        // Turn base64 to byte[]
-        byte[] image = Base64.getEncoder().encode(request.getImage().getBytes(StandardCharsets.UTF_8));
-
         // Form slug
         String slug = request.getName().toLowerCase().replace(" ", "-");
 
@@ -76,7 +78,7 @@ public final class BookController {
         book.setDescription(request.getDescription());
         book.setSlug(slug);
         book.setAuthor(author);
-        book.setImage(image);
+        book.setImage(new byte[0]);
         book.setCreated(new Date());
         bookDAO.save(book);
 
@@ -297,6 +299,50 @@ public final class BookController {
         return ResponseEntity.ok(comment);
     }
 
+    @RequestMapping(
+            value = {"/image"},
+            method = RequestMethod.POST
+    )
+    public ResponseEntity<?> setImage(
+            @RequestParam(name = "id") final String id,
+            @RequestParam(name = "image") final MultipartFile image
+    ) {
+        Book book = bookDAO.findById(Integer.parseInt(id)).orElse(null);
+
+        if (book == null) {
+            return ResponseEntity.badRequest().body(new GenericResponse("Could not locate a book with the id " + id));
+        }
+
+        try {
+            book.setImage(image.getBytes());
+            bookDAO.save(book);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(new GenericResponse("Image failed to upload"));
+        }
+
+        return ResponseEntity.ok(new GenericResponse("Image successfully uploaded"));
+    }
+
+    @RequestMapping(
+            value = {"/image"},
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> getImage(
+            @RequestParam(name = "id") final String id
+    ) {
+        Book book = bookDAO.findById(Integer.parseInt(id)).orElse(null);
+
+        if (book == null) {
+            return ResponseEntity.badRequest().body(new GenericResponse("Could not locate a book with the id " + id));
+        }
+
+        HashMap<String, String> image = new HashMap<>();
+        image.put("image", "data:image/png;base64," + StringUtils.newStringUtf8(Base64.getEncoder().encode(book.getImage())));
+        return ResponseEntity.ok(image);
+    }
+
     /**
      * Get all books
      * @return books
@@ -308,5 +354,49 @@ public final class BookController {
     )
     public Iterable<Book> getAll() {
         return bookDAO.findAll();
+    }
+
+    public static byte[] compressBytes(byte[] data) {
+        Deflater deflater = new Deflater();
+        deflater.setInput(data);
+        deflater.finish();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+
+        byte[] buffer = new byte[1024];
+
+        while (!deflater.finished()) {
+            int count = deflater.deflate(buffer);
+            outputStream.write(buffer, 0, count);
+        }
+
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+        return outputStream.toByteArray();
+    }
+
+    public static byte[] decompressBytes(byte[] data) {
+        Inflater inflater = new Inflater();
+        inflater.setInput(data);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+
+        byte[] buffer = new byte[1024];
+
+        try {
+
+            while (!inflater.finished()) {
+                int count = inflater.inflate(buffer);
+                outputStream.write(buffer, 0, count);
+            }
+            outputStream.close();
+        } catch (IOException | DataFormatException e) {
+            e.printStackTrace();
+        }
+        return outputStream.toByteArray();
     }
 }
